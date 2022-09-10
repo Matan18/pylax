@@ -1,4 +1,4 @@
- Player
+[DONE]Player
   - id: String
   - name: String
   - number_of_truths: Integer
@@ -18,7 +18,7 @@ Game
  - victim: Player
  - votes: List<Player>
 
-Room
+[DONE]Room
  - id_txt_channel: String
  - id_voice_channel: String
  - playersInside: List<Player>

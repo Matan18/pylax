@@ -5,11 +5,11 @@ class Room:
         self,
         id_txt_channel: str,
         id_voice_channel: str,
-        playersInside:list[Player]
+        players:list[Player]
     ):
         self.__id_txt_channel: str = id_txt_channel
         self.__id_voice_channel: str = id_voice_channel
-        self.__playersInside: list[Player] = playersInside
+        self.__players: list[Player] = players
 
     @property
     def id_txt_channel(self) -> str:
@@ -28,13 +28,13 @@ class Room:
         self.__id_voice_channel = id_voice_channel
     
     @property
-    def playersInside(self) -> list[Player]:
-        return self.__playersInside
+    def players(self) -> list[Player]:
+        return self.__players
 
     def addPlayer(self, player: Player) -> None:
-        self.__playersInside.append(player)
+        self.__players.append(player)
 
     def removePlayer(self, id_player: str) -> None:
-        for player in self.playersInside:
+        for player in self.players:
             if player.id == id_player:
-                self.playersInside.remove(player)
+                self.players.remove(player)

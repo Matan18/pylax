@@ -1,0 +1,1 @@
+ROOT_PATH: str = f'{__path__[0]}/..'

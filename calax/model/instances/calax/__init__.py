@@ -1,5 +1,8 @@
 # Personal packages
 from model.entities.calax import Calax
+from model.entities.game import Game
+from model.entities.room import Room
+from model.entities.player import Player
 
 # External packges
 import discord
@@ -29,3 +32,30 @@ calax = Calax(
     bot_token = TOKEN,
     bot = bot
 )
+
+rooms = [
+    {
+        'bot_master': '546840612972789782',
+        'id_text_channel': '1018594639021875271',
+        'id_voice_channel': '910507210906431498'
+    },
+    {
+        'bot_master': '772066124052693013',
+        'id_text_channel': '1018594664259006504',
+        'id_voice_channel': '910518654926475274'
+    }
+]
+
+# Add all games to calax
+for room in rooms:
+    calax.addRoom(
+        Room(
+            id_txt_channel = room['id_text_channel'],
+            id_voice_channel = room['id_voice_channel'],
+            game = Game(
+                bot_master = Player(
+                    room['bot_master']
+                )
+            )            
+        )
+    )

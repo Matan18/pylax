@@ -3,25 +3,23 @@ from discord.ext.commands import (
 )
 
 from model.entities.player import Player
-from model.entities.room import Room
 
 class Game:
-    self.__asker: Player = asker
-    self.__fase_controller: int = fase_controller
-    self.__isVictimAAsker: bool = isVictimAAsker
+    __asker: Player = None
+    __fase_controller: int = 0
+    __isVictimAAsker: bool = None
     # # Store this context to start next matchs by itself
-    self.__master_context: Context = master_context
-    self.__last_context: Context = last_context
-    self.__players: List[Player] = players
-    self.__players_pointer: int = players_pointer
-    self.__victim: Player = victim
-    self.__votes: list[Player] = votes
+    __master_context: Context = None
+    __last_context: Context = None
+    __players: list[Player] = None
+    __players_pointer: int = 0
+    __victim: Player = None
+    __votes: list[Player] = None
 
     def __init__(
-        self, bot_master: Player, room: Room
+        self, bot_master: Player
     ):
         self.__bot_master: Player = bot_master
-        self.__room: Room = room
     
     @property
     def asker(self) -> Player:
@@ -35,7 +33,7 @@ class Game:
     def bot_master(self) -> Player:
         return self.__bot_master
     
-    @asker.setter
+    @bot_master.setter
     def bot_master(self, bot_master: Player) -> None:
         self.__bot_master = bot_master
 
@@ -88,14 +86,6 @@ class Game:
         self.__players_pointer = players_pointer
 
     @property
-    def room(self) -> Room:
-        return self.__room
-    
-    @room.setter
-    def room(self, room: Room) -> None:
-        self.__room = room
-
-    @property
     def victim(self) -> Player:
         return self.__victim
     
@@ -103,7 +93,6 @@ class Game:
     def victim(self, victim: Player) -> None:
         self.__victim = victim
 
-    
     @property
     def votes(self) -> list[Player]:
         return self.__votes

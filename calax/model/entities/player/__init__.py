@@ -1,12 +1,12 @@
 class Player:
     __number_of_truths: int = 0
+    __name: str = ''
+    __response: str = ''
 
     def __init__(
-        self, id: str, name: str, response: str
+        self, id: str
     ):
         self.__id: str = id
-        self.__name: str = name
-        self.__response: str = response
 
     @property
     def number_of_truths(self) -> str:

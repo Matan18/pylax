@@ -1,10 +1,17 @@
+from discord.ext.commands import Bot
+
 class Calax:
     def __init__(
-        self, id_auth_message: str, id_auth_channel: str, bot_token: str
+        self,
+        id_auth_message: str,
+        id_auth_channel: str,
+        bot_token: str,
+        bot: Bot
     ):
         self.__id_auth_message: str = id_auth_message
         self.__id_auth_channel: str = id_auth_channel
         self.__bot_token: str = bot_token
+        self.__bot: Bot = bot
 
     @property
     def id_auth_message(self) -> str:
@@ -29,4 +36,7 @@ class Calax:
     @bot_token.setter
     def bot_token(self, bot_token: str) -> None:
         self.__bot_token = bot_token
-    
+
+    @property
+    def bot(self) -> Bot:
+        return self.__bot

@@ -1,7 +1,9 @@
+from discord.user import User
 class Player:
     __number_of_truths: int = 0
     __name: str = ''
     __response: str = ''
+    __user: User = None
 
     def __init__(
         self, id: str
@@ -39,3 +41,11 @@ class Player:
     @response.setter
     def response(self, response: str) -> None:
         self.__response = response
+
+    @property
+    def user(self) -> User:
+        return self.__user
+
+    @user.setter
+    def user(self, user: str) -> None:
+        self.__user = user

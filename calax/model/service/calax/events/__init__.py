@@ -119,18 +119,31 @@ async def on_raw_reaction_add(payload: RawReactionActionEvent):
             # Check if this player is not in a game already
             # And if player is not Calax
             if player.id not in [player.id for player in player_room.game.players]\
-            and player.id != calax.bot.user.id:
+            and player.id != str(calax.bot.user.id):
                 player_room.game.addPlayer(player)
                 await player.user.send(f'<@{player.id}>, agora você está no jogo.')
 
         # ------------ VOTING MESSAGE ------------
         elif str(reacted_message.id) == player_room.game.id_voting_message\
-        and player.id != calax.bot.user.id:
+        and player.id != str(calax.bot.user.id):
             # IMPLEMENTS
             ...
         # ------------ REACTION OUTTA THE GAME ------------
         else:
             # IMPLEMENTS
             ...
+    # Player not in a room
     else:
+        # ------------ AUTH MESSAGE ------------
+        if str(payload.message_id) == calax.id_auth_message\
+            and player.id != str(calax.bot.user.id):
+            try:
+                reacted_text_channel: TextChannel = calax.bot.get_channel(payload.channel_id)
+                reacted_message: Message = await reacted_text_channel.fetch_message(payload.message_id)
+                await reacted_message.remove_reaction(payload.emoji.name, player.user)
+
+                await player.user.send(f'<@{player.id}>, você precisa estar em uma fala para participar do jogo.')
+            except Exception as exception:
+                print(exception)
         print('Player is not in room!')
+

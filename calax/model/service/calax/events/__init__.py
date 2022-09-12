@@ -147,3 +147,41 @@ async def on_raw_reaction_add(payload: RawReactionActionEvent):
                 print(exception)
         print('Player is not in room!')
 
+@calax.bot.event
+async def on_raw_reaction_remove(payload):
+    player = Player(str(payload.user_id))
+    player.user = calax.bot.get_user(int(player.id))
+    player_room: Room = findRoomInCalaxByPlayerId(player.id, calax)
+    # Check if reaction was in a game text channel
+    if player_room:
+        print(f'player_room.id_voice_channel: {player_room.id_voice_channel}')
+        id_voice_channel: str = player_room.id_voice_channel
+        id_text_channel: str = player_room.id_txt_channel
+
+        voice_channel: VoiceChannel = calax.bot.get_channel(int(id_voice_channel))
+        reacted_text_channel: TextChannel = calax.bot.get_channel(payload.channel_id)
+
+        voice_channel_members: list[Member] = voice_channel.members
+        reacted_message: Message = await reacted_text_channel.fetch_message(payload.message_id)
+
+        # ------------ AUTH MESSAGE ------------
+        if str(reacted_message.id) == calax.id_auth_message:
+            # Check if this player is not in a game already
+            # And if player is not Calax
+            if player.id in [player.id for player in player_room.game.players]\
+            and player.id != str(calax.bot.user.id):
+                player_room.game.removePlayer(player.id)
+                await player.user.send(f'<@{player.id}>, você não pode sair do jogo. Vai pagar por isso!😈')
+                # IMPLEMENTS
+                # Start a new round if player was asker or a victim
+
+        # ------------ VOTING MESSAGE ------------
+        elif str(reacted_message.id) == player_room.game.id_voting_message\
+        and player.id != str(calax.bot.user.id):
+            # IMPLEMENTS
+            ...
+        # ------------ REACTION OUTTA THE GAME ------------
+        else:
+            # IMPLEMENTS
+            ...
+

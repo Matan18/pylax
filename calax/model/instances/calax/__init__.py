@@ -56,6 +56,6 @@ for room in rooms:
                 bot_master = Player(
                     room['bot_master']
                 )
-            )            
+            )          
         )
     )

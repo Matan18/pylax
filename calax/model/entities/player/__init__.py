@@ -1,14 +1,14 @@
 from discord.user import User
 class Player:
-    __number_of_truths: int = 0
-    __name: str = ''
-    __response: str = ''
-    __user: User = None
 
     def __init__(
         self, id: str
     ):
         self.__id: str = id
+        self.__number_of_truths: int = 0
+        self.__name: str = ''
+        self.__response: str = ''
+        self.__user: User = None
 
     @property
     def number_of_truths(self) -> str:

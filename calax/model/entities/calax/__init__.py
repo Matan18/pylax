@@ -2,7 +2,6 @@ from discord.ext.commands import Bot
 from model.entities.room import Room
 
 class Calax:
-    __rooms: list[Room] = []
 
     def __init__(
         self,
@@ -15,6 +14,7 @@ class Calax:
         self.__id_auth_channel: str = id_auth_channel
         self.__bot_token: str = bot_token
         self.__bot: Bot = bot
+        self.__rooms: list[Room] = []
 
     @property
     def id_auth_message(self) -> str:

@@ -5,21 +5,22 @@ from discord.ext.commands import (
 from model.entities.player import Player
 
 class Game:
-    __asker: Player = None
-    __fase_controller: int = 0
-    __isVictimAAsker: bool = None
-    # # Store this context to start next matchs by itself
-    __master_context: Context = None
-    __last_context: Context = None
-    __players: list[Player] = None
-    __players_pointer: int = 0
-    __victim: Player = None
-    __votes: list[Player] = None
 
     def __init__(
         self, bot_master: Player
     ):
+        self.__asker: Player = None
         self.__bot_master: Player = bot_master
+        self.__fase_controller: int = 0
+        self.__id_voting_message: str = None
+        self.__is_victim_a_asker: bool = None
+        # Store this context to start next matchs by itself
+        self.__master_context: Context = None
+        self.__last_context: Context = None
+        self.__players: list[Player] = []
+        self.__players_pointer: int = 0
+        self.__victim: Player = None
+        self.__votes: list[Player] = []
     
     @property
     def asker(self) -> Player:
@@ -46,12 +47,20 @@ class Game:
         self.__fase_controller = fase_controller
 
     @property
-    def isVictimAAsker(self) -> bool:
-        return self.__isVictimAAsker
+    def id_voting_message(self) -> str:
+        return self.__id_voting_message
 
-    @isVictimAAsker.setter
-    def isVictimAAsker(self, isVictimAAsker: bool) -> None:
-        self.__isVictimAAsker = isVictimAAsker
+    @id_voting_message.setter
+    def id_voting_message(self, id_voting_message: str) -> None:
+        self.__id_voting_message = id_voting_message
+
+    @property
+    def is_victim_a_asker(self) -> bool:
+        return self.__is_victim_a_asker
+
+    @is_victim_a_asker.setter
+    def is_victim_a_asker(self, is_victim_a_asker: bool) -> None:
+        self.__is_victim_a_asker = is_victim_a_asker
 
     @property
     def last_context(self) -> Context:
@@ -100,3 +109,11 @@ class Game:
     @votes.setter
     def votes(self, votes: list[Player]) -> None:
         self.__votes = votes
+
+    def addPlayer(self, player: Player) -> None:
+        self.__players.append(player)
+
+    def removePlayer(self, id_player: str) -> None:
+        for player in self.players:
+            if player.id == id_player:
+                self.players.remove(player)

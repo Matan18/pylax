@@ -2,7 +2,6 @@ from model.entities.player import Player
 from model.entities.game import Game
 
 class Room:
-    __players: list[Player] = []
 
     def __init__(
         self,
@@ -13,6 +12,7 @@ class Room:
         self.__id_txt_channel: str = id_txt_channel
         self.__id_voice_channel: str = id_voice_channel
         self.__game: Game = game
+        self.__players: list[Player] = []
 
     @property
     def id_txt_channel(self) -> str:
@@ -33,6 +33,10 @@ class Room:
     @property
     def players(self) -> list[Player]:
         return self.__players
+    
+    @players.setter
+    def players(self, players: list[Player]) -> None:
+        self.__players = players
     
     @property
     def game(self) -> Game:

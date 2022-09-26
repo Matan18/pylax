@@ -3,11 +3,11 @@ from model.entities.room import Room
 from model.entities.calax import Calax
 from model.instances.calax import calax
 
-from model.service.calax.events import(
-  on_ready
-)
-
 from discord.ext.commands import Context
+
+from model.service.calax.events import (
+    on_ready
+)
 
 from util import ROOT_PATH
 

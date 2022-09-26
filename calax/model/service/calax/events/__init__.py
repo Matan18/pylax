@@ -11,7 +11,10 @@ from discord.channel import (
     VoiceChannel
 )
 from discord.message import Message
-from discord.member import Member
+from discord.member import (
+    Member,
+    VoiceState
+)
 from discord.raw_models import RawReactionActionEvent
 
 @calax.bot.event
@@ -47,6 +50,7 @@ async def on_ready():
     except Exception as exception:
         if exception.code == 10008:
             print('Auth-message not found')
+    print('Calax tá on! 😎')
 
 @calax.bot.event
 async def close():
@@ -148,40 +152,100 @@ async def on_raw_reaction_add(payload: RawReactionActionEvent):
         print('Player is not in room!')
 
 @calax.bot.event
-async def on_raw_reaction_remove(payload):
-    player = Player(str(payload.user_id))
-    player.user = calax.bot.get_user(int(player.id))
-    player_room: Room = findRoomInCalaxByPlayerId(player.id, calax)
-    # Check if reaction was in a game text channel
-    if player_room:
-        print(f'player_room.id_voice_channel: {player_room.id_voice_channel}')
-        id_voice_channel: str = player_room.id_voice_channel
-        id_text_channel: str = player_room.id_txt_channel
+async def on_voice_state_update(
+    context: Member,
+    before: VoiceState,
+    after: VoiceState
+):
+    print(context.id)
+    # print(before)
+    # print(after)
+    game_voice_channels: str = [room.id_voice_channel for room in calax.rooms]
+    print(game_voice_channels)
 
-        voice_channel: VoiceChannel = calax.bot.get_channel(int(id_voice_channel))
-        reacted_text_channel: TextChannel = calax.bot.get_channel(payload.channel_id)
-
-        voice_channel_members: list[Member] = voice_channel.members
-        reacted_message: Message = await reacted_text_channel.fetch_message(payload.message_id)
-
-        # ------------ AUTH MESSAGE ------------
-        if str(reacted_message.id) == calax.id_auth_message:
-            # Check if this player is not in a game already
-            # And if player is not Calax
-            if player.id in [player.id for player in player_room.game.players]\
-            and player.id != str(calax.bot.user.id):
-                player_room.game.removePlayer(player.id)
-                await player.user.send(f'<@{player.id}>, você não pode sair do jogo. Vai pagar por isso!😈')
-                # IMPLEMENTS
-                # Start a new round if player was asker or a victim
-
-        # ------------ VOTING MESSAGE ------------
-        elif str(reacted_message.id) == player_room.game.id_voting_message\
-        and player.id != str(calax.bot.user.id):
-            # IMPLEMENTS
+    # Got into a voice channel
+    if before.channel == None:
+        # Check if it's a game channel
+        if str(after.channel.id) in game_voice_channels:
             ...
-        # ------------ REACTION OUTTA THE GAME ------------
-        else:
-            # IMPLEMENTS
+        # Check if it's not a game channel (probably not necessary)
+        ...
+    # Got out from a voice channel just
+    elif before.channel != None and after.channel == None:
+        # Check if it's from a game channel
+        if str(before.channel.id) in game_voice_channels:
+            ...
+        # Check if it's not from a game channel (probably not necessary)
+        ...
+    # Changed its voice channel
+    elif before.channel != None and after.channel != None:
+        # Check if it's from a game channel to a game channel
+        if str(before.channel.id) in game_voice_channels and\
+            str(after.channel.id) in game_voice_channels:
             ...
 
+        # Check if it's not from a game channel to a game channel
+        elif str(before.channel.id) not in game_voice_channels and\
+            str(after.channel.id) in game_voice_channels:
+            ...
+            
+        # Check if it's from a game channel to a not game channel
+        elif str(before.channel.id)  in game_voice_channels and\
+            str(after.channel.id) not in game_voice_channels:
+            ...
+        # Check if it's not from a game channel
+        ...
+#     if before.channel != None:
+#       b_current_channel_id = before.channel.id
+
+#     if after.channel != None:
+#       a_current_channel_id = after.channel.id
+
+
+#     user = ctx.id
+#     b = str(before.channel)
+#     a = str(after.channel)
+#     # Get inside
+#     # print(f'Before:{before}', f'\nAfter:{after}')
+#     if ((b == 'None' and a != 'None') or (b != 'None' and a != 'None')) and (a != b) and after.channel.id in channels_ids.keys():
+
+#         if user not in channels_ids[after.channel.id]['mem_vc_id']:
+#           channels_ids[after.channel.id]['mem_vc_id'].append(user)
+
+#         if before.channel and after.channel is not None and before.channel.id != after.channel.id:
+#           auth_msg_id = channels_ids[before.channel.id]['auth_msg_id']
+#           txt_channel_id = channels_ids[before.channel.id]['txt_channel_id']
+#           txt_channel   = client.get_channel(txt_channel_id)
+#           # Remove reaction from auth message and user from the list
+#           if user in channels_ids[before.channel.id]['mem_vc_id']:
+#             channels_ids[before.channel.id]['mem_vc_id'].remove(user)
+#             channel = client.get_channel(channels_ids[before.channel.id]['auth_channel_id'])
+#             message = await channel.fetch_message(auth_msg_id)
+#             user_g  = client.get_user(user)
+#             await message.remove_reaction("👍", user_g)
+
+#           # If this user is in the players list, it takes
+#           # it off
+#           if user in channels_ids[before.channel.id]['mem_play_id']:
+#             channels_ids[before.channel.id]['mem_play_id'].remove(user)
+#             await ctx.send(f'<@{user}>, você não pode sair do jogo. Vai pagar por isso!😈')
+
+#             # If person who left is the victim, it
+#             # restart round
+#             try:
+#               victim = channels_ids[before.channel.id]['victim']
+#               asker = channels_ids[before.channel.id]['asker']
+#               if user == victim:
+#                 await txt_channel.send(f'Nossa vítima <@{user}> saiu da sala. Vamos reiniciar a rodada.')
+#                 channels_ids[before.channel.id]['ctrl']   = 0
+#                 channels_ids[before.channel.id]['turn']  -= 1
+#                 channels_ids[before.channel.id]['victim'] = None
+#                 await iniciar(channels_ids[before.channel.id]['master_ctx'])
+                  
+#               elif user == asker:
+#                 await txt_channel.send(f'A pessoa que pergunta saiu da sala. Vamos reiniciar a rodada.')
+#                 channels_ids[before.channel.id]['ctrl']   = 0
+#                 channels_ids[before.channel.id]['asker'] = None
+#                 await iniciar(channels_ids[before.channel.id]['master_ctx'])
+#             except:
+#               pass

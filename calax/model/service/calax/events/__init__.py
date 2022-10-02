@@ -286,71 +286,19 @@ async def on_voice_state_update(
                     )
                     break
             
-        # Check if it was from a game channel to not a game channel
+        # Check if it was from a game channel to a not game channel
         elif str(before.channel.id) in game_voice_channels and\
             str(after.channel.id) not in game_voice_channels:
-            # [TO-DO] TAKE OUT FROM ITS ROOM
-            # [TO-DO] REMOVE ITS REACTION FROM AUTH MESSAGE
-            # [CHECK] IT WAS IN A GAME
-                # [TO-DO] TAKE OUT FROM A GAME
-                # [CHECK] IT WAS A VICTIM
-                    # [TO-DO] RESTART THE ROUND
-                # [CHECK] IT WAS A ASKER
-                    # [TO-DO] GO TO NEXT ROUND
-            ...
-        # Check if it's not from a game channel
-        ...
-#     if before.channel != None:
-#       b_current_channel_id = before.channel.id
+             # REMOVE IT FROM ITS ROOM
+            id_auth_message: str = calax.id_auth_message
+            auth_channel: TextChannel = calax.bot.get_channel(int(calax.id_auth_channel))
+            auth_message: Message = await auth_channel.fetch_message(int(id_auth_message))
+            await auth_message.remove_reaction("👍", player.user)
 
-#     if after.channel != None:
-#       a_current_channel_id = after.channel.id
-
-
-#     user = ctx.id
-#     b = str(before.channel)
-#     a = str(after.channel)
-#     # Get inside
-#     # print(f'Before:{before}', f'\nAfter:{after}')
-#     if ((b == 'None' and a != 'None') or (b != 'None' and a != 'None')) and (a != b) and after.channel.id in channels_ids.keys():
-
-#         if user not in channels_ids[after.channel.id]['mem_vc_id']:
-#           channels_ids[after.channel.id]['mem_vc_id'].append(user)
-
-#         if before.channel and after.channel is not None and before.channel.id != after.channel.id:
-#           auth_msg_id = channels_ids[before.channel.id]['auth_msg_id']
-#           txt_channel_id = channels_ids[before.channel.id]['txt_channel_id']
-#           txt_channel   = client.get_channel(txt_channel_id)
-#           # Remove reaction from auth message and user from the list
-#           if user in channels_ids[before.channel.id]['mem_vc_id']:
-#             channels_ids[before.channel.id]['mem_vc_id'].remove(user)
-#             channel = client.get_channel(channels_ids[before.channel.id]['auth_channel_id'])
-#             message = await channel.fetch_message(auth_msg_id)
-#             user_g  = client.get_user(user)
-#             await message.remove_reaction("👍", user_g)
-
-#           # If this user is in the players list, it takes
-#           # it off
-#           if user in channels_ids[before.channel.id]['mem_play_id']:
-#             channels_ids[before.channel.id]['mem_play_id'].remove(user)
-#             await ctx.send(f'<@{user}>, você não pode sair do jogo. Vai pagar por isso!😈')
-
-#             # If person who left is the victim, it
-#             # restart round
-#             try:
-#               victim = channels_ids[before.channel.id]['victim']
-#               asker = channels_ids[before.channel.id]['asker']
-#               if user == victim:
-#                 await txt_channel.send(f'Nossa vítima <@{user}> saiu da sala. Vamos reiniciar a rodada.')
-#                 channels_ids[before.channel.id]['ctrl']   = 0
-#                 channels_ids[before.channel.id]['turn']  -= 1
-#                 channels_ids[before.channel.id]['victim'] = None
-#                 await iniciar(channels_ids[before.channel.id]['master_ctx'])
-                  
-#               elif user == asker:
-#                 await txt_channel.send(f'A pessoa que pergunta saiu da sala. Vamos reiniciar a rodada.')
-#                 channels_ids[before.channel.id]['ctrl']   = 0
-#                 channels_ids[before.channel.id]['asker'] = None
-#                 await iniciar(channels_ids[before.channel.id]['master_ctx'])
-#             except:
-#               pass
+            # REMOVE IT FROM ITS ROOM
+            for room in calax.rooms:
+                if str(before.channel.id) == room.id_voice_channel:
+                    room.removePlayer(
+                        id_player = str(context.id)
+                    )
+                    break

@@ -43,7 +43,7 @@ class Room:
         return self.__game
     
     @game.setter
-    def game(self, room: Game) -> None:
+    def game(self, game: Game) -> None:
         self.__game = game
 
     def addPlayer(self, player: Player) -> None:

@@ -28,7 +28,7 @@ async def on_ready():
         await message.clear_reaction("👍")
         # Add first reaction in auth message
         await message.add_reaction("👍")
-        for index, room in enumerate(calax.rooms):
+        for room in calax.rooms:
             voice_channel: VoiceChannel = calax.bot.get_channel(int(room.id_voice_channel))
             voice_channel_members: list[Member] = voice_channel.members
 
@@ -108,7 +108,6 @@ async def on_raw_reaction_add(payload: RawReactionActionEvent):
     player_room: Room = findRoomInCalaxByPlayerId(player.id, calax)
     # Check if reaction was in a game text channel
     if player_room:
-        print(f'player_room.id_voice_channel: {player_room.id_voice_channel}')
         id_voice_channel: str = player_room.id_voice_channel
         id_text_channel: str = player_room.id_txt_channel
 
@@ -149,7 +148,7 @@ async def on_raw_reaction_add(payload: RawReactionActionEvent):
                 await player.user.send(f'<@{player.id}>, você precisa estar em uma fala para participar do jogo.')
             except Exception as exception:
                 print(exception)
-        print('Player is not in room!')
+        # print('Player is not in room!')
 
 @calax.bot.event
 async def on_voice_state_update(
@@ -157,41 +156,76 @@ async def on_voice_state_update(
     before: VoiceState,
     after: VoiceState
 ):
-    print(context.id)
-    # print(before)
-    # print(after)
+
+    player = Player(str(context.id))
+    player.user = calax.bot.get_user(int(player.id))
     game_voice_channels: str = [room.id_voice_channel for room in calax.rooms]
-    print(game_voice_channels)
 
     # Got into a voice channel
     if before.channel == None:
         # Check if it's a game channel
         if str(after.channel.id) in game_voice_channels:
-            ...
-        # Check if it's not a game channel (probably not necessary)
-        ...
+            # ADD IT INTO ITS ROOM
+            for room in calax.rooms:
+                if str(after.channel.id) == room.id_voice_channel:
+                    room.addPlayer(
+                        player = player
+                    )
+                    break
+
     # Got out from a voice channel just
     elif before.channel != None and after.channel == None:
         # Check if it's from a game channel
         if str(before.channel.id) in game_voice_channels:
+            # REMOVE IT FROM ITS ROOM
+            id_auth_message = calax.id_auth_message
+            auth_channel = calax.bot.get_channel(int(calax.id_auth_channel))
+            auth_message = await auth_channel.fetch_message(int(id_auth_message))
+            await auth_message.remove_reaction("👍", player.user)
+            for room in calax.rooms:
+                if str(before.channel.id) == room.id_voice_channel:
+                    room.removePlayer(
+                        id_player = str(context.id)
+                    )
+                    break
+            # [TO-DO] REMOVE ITS REACTION FROM AUTH MESSAGE
+            # [CHECK] IT WAS IN A GAME
+                # [TO-DO] TAKE OUT FROM A GAME
+                # [CHECK] IT WAS A VICTIM
+                    # [TO-DO] RESTART THE ROUND
+                # [CHECK] IT WAS A ASKER
+                    # [TO-DO] GO TO NEXT ROUND
+                
             ...
-        # Check if it's not from a game channel (probably not necessary)
-        ...
     # Changed its voice channel
     elif before.channel != None and after.channel != None:
         # Check if it's from a game channel to a game channel
         if str(before.channel.id) in game_voice_channels and\
             str(after.channel.id) in game_voice_channels:
+            # [TO-DO] TAKE OUT FROM ITS ROOM
+            # [TO-DO] REMOVE ITS REACTION FROM AUTH MESSAGE
+            # [CHECK] IT WAS IN A GAME
+                # [TO-DO] TAKE OUT FROM A GAME
+            # [TO-DO] PUT IT INTO ITS ROOM
             ...
 
         # Check if it's not from a game channel to a game channel
         elif str(before.channel.id) not in game_voice_channels and\
             str(after.channel.id) in game_voice_channels:
+            # [TO-DO] PUT IT INTO ITS ROOM
             ...
             
         # Check if it's from a game channel to a not game channel
         elif str(before.channel.id)  in game_voice_channels and\
             str(after.channel.id) not in game_voice_channels:
+            # [TO-DO] TAKE OUT FROM ITS ROOM
+            # [TO-DO] REMOVE ITS REACTION FROM AUTH MESSAGE
+            # [CHECK] IT WAS IN A GAME
+                # [TO-DO] TAKE OUT FROM A GAME
+                # [CHECK] IT WAS A VICTIM
+                    # [TO-DO] RESTART THE ROUND
+                # [CHECK] IT WAS A ASKER
+                    # [TO-DO] GO TO NEXT ROUND
             ...
         # Check if it's not from a game channel
         ...

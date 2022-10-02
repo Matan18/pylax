@@ -1,5 +1,6 @@
 from discord.ext.commands import Bot
 from model.entities.room import Room
+from model.entities.player import Player
 
 class Calax:
 

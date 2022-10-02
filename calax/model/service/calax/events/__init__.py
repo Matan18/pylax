@@ -145,7 +145,7 @@ async def on_raw_reaction_add(payload: RawReactionActionEvent):
                 reacted_message: Message = await reacted_text_channel.fetch_message(payload.message_id)
                 await reacted_message.remove_reaction(payload.emoji.name, player.user)
 
-                await player.user.send(f'<@{player.id}>, você precisa estar em uma fala para participar do jogo.')
+                await player.user.send(f'<@{player.id}>, você precisa estar em um canal de voz do jogo para participar.')
             except Exception as exception:
                 print(exception)
         # print('Player is not in room!')
@@ -245,7 +245,7 @@ async def on_voice_state_update(
                         id_player = str(context.id)
                     )
                     break
-            ...
+
     # Changed its voice channel
     elif before.channel != None and after.channel != None:
         # Check if it was from a game channel to another game channel
@@ -274,16 +274,20 @@ async def on_voice_state_update(
                     )
                     break
 
-            ...
-
-        # Check if it's not from a game channel to a game channel
+        # Check if it was not from a game channel to a game channel
         elif str(before.channel.id) not in game_voice_channels and\
             str(after.channel.id) in game_voice_channels:
-            # [TO-DO] PUT IT INTO ITS ROOM
-            ...
+
+            # ADD IT INTO ITS ROOM
+            for room in calax.rooms:
+                if str(after.channel.id) == room.id_voice_channel:
+                    room.addPlayer(
+                        player = player
+                    )
+                    break
             
-        # Check if it's from a game channel to a not game channel
-        elif str(before.channel.id)  in game_voice_channels and\
+        # Check if it was from a game channel to not a game channel
+        elif str(before.channel.id) in game_voice_channels and\
             str(after.channel.id) not in game_voice_channels:
             # [TO-DO] TAKE OUT FROM ITS ROOM
             # [TO-DO] REMOVE ITS REACTION FROM AUTH MESSAGE

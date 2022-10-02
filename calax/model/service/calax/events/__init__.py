@@ -174,6 +174,10 @@ async def on_raw_reaction_remove(payload: RawReactionActionEvent):
             and player.id != str(calax.bot.user.id):
                 player_room.game.removePlayer(player.id)
                 await player.user.send(f'<@{player.id}>, você não pode sair do jogo. Vai pagar por isso!😈')
+                # [CHECK] IT WAS A VICTIM
+                    # [TO-DO] RESTART THE ROUND
+                # [CHECK] IT WAS A ASKER
+                    # [TO-DO] GO TO NEXT ROUND
 
         # ------------ VOTING MESSAGE ------------
         elif str(reacted_message.id) == player_room.game.id_voting_message\
@@ -227,36 +231,49 @@ async def on_voice_state_update(
     elif before.channel != None and after.channel == None:
         # Check if it's from a game channel
         if str(before.channel.id) in game_voice_channels:
+
             # REMOVE IT FROM ITS ROOM
-            id_auth_message = calax.id_auth_message
-            auth_channel = calax.bot.get_channel(int(calax.id_auth_channel))
-            auth_message = await auth_channel.fetch_message(int(id_auth_message))
+            id_auth_message: str = calax.id_auth_message
+            auth_channel: TextChannel = calax.bot.get_channel(int(calax.id_auth_channel))
+            auth_message: Message = await auth_channel.fetch_message(int(id_auth_message))
             await auth_message.remove_reaction("👍", player.user)
+
+            # REMOVE IT FROM ITS ROOM
             for room in calax.rooms:
                 if str(before.channel.id) == room.id_voice_channel:
                     room.removePlayer(
                         id_player = str(context.id)
                     )
                     break
-            # [TO-DO] REMOVE ITS REACTION FROM AUTH MESSAGE
-            # [CHECK] IT WAS IN A GAME
-                # [TO-DO] TAKE OUT FROM A GAME
-                # [CHECK] IT WAS A VICTIM
-                    # [TO-DO] RESTART THE ROUND
-                # [CHECK] IT WAS A ASKER
-                    # [TO-DO] GO TO NEXT ROUND
-                
             ...
     # Changed its voice channel
     elif before.channel != None and after.channel != None:
-        # Check if it's from a game channel to a game channel
+        # Check if it was from a game channel to another game channel
         if str(before.channel.id) in game_voice_channels and\
             str(after.channel.id) in game_voice_channels:
-            # [TO-DO] TAKE OUT FROM ITS ROOM
-            # [TO-DO] REMOVE ITS REACTION FROM AUTH MESSAGE
-            # [CHECK] IT WAS IN A GAME
-                # [TO-DO] TAKE OUT FROM A GAME
-            # [TO-DO] PUT IT INTO ITS ROOM
+
+            # REMOVE IT FROM ITS ROOM
+            id_auth_message: str = calax.id_auth_message
+            auth_channel: TextChannel = calax.bot.get_channel(int(calax.id_auth_channel))
+            auth_message: Message = await auth_channel.fetch_message(int(id_auth_message))
+            await auth_message.remove_reaction("👍", player.user)
+
+            # REMOVE IT FROM ITS ROOM
+            for room in calax.rooms:
+                if str(before.channel.id) == room.id_voice_channel:
+                    room.removePlayer(
+                        id_player = str(context.id)
+                    )
+                    break
+
+            # ADD IT INTO ITS ROOM
+            for room in calax.rooms:
+                if str(after.channel.id) == room.id_voice_channel:
+                    room.addPlayer(
+                        player = player
+                    )
+                    break
+
             ...
 
         # Check if it's not from a game channel to a game channel

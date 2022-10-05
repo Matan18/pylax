@@ -250,7 +250,8 @@ async def on_voice_state_update(
     elif before.channel != None and after.channel != None:
         # Check if it was from a game channel to another game channel
         if str(before.channel.id) in game_voice_channels and\
-            str(after.channel.id) in game_voice_channels:
+            str(after.channel.id) in game_voice_channels and\
+            before.channel.id != after.channel.id:
 
             # REMOVE IT FROM ITS ROOM
             id_auth_message: str = calax.id_auth_message

@@ -1,5 +1,4 @@
 from model.entities.calax import Calax
-from model.entities.player import Player
 from model.entities.room import Room
 
 def findRoomInCalaxByPlayerId(player_id: str, calax: Calax) -> None | Room :

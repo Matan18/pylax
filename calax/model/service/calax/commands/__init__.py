@@ -9,6 +9,9 @@ from discord.member import (
 from discord.ext.commands.context import (
     Context
 )
+from discord.message import Message
+
+from random import choice
 
 from util.room import (
     findRoomInCalaxByPlayerId
@@ -72,5 +75,44 @@ async def iniciar(context: Context):
                     await showListOfPlayers(context = context)
                     await context.send(f'\n<@{room.game.asker.id}> gire a garrafa.')
                     room.game.fase_controller = 1
+                    break
                 else:
                     await context.send(f'Não é possível inciar uma partida agora. Veja o número de jogadores ou em que fase estamos.')
+                break
+
+@calax.bot.command()
+async def girar(context: Context):
+    player: Player = Player(str(context.author.id))
+    player.user = calax.bot.get_user(int(player.id))
+    player_room: Room = findRoomInCalaxByPlayerId(player.id, calax)
+    for room in calax.rooms:
+        if str(context.channel.id) == room.id_txt_channel and\
+        room.game.fase_controller == 1 and\
+        room.game.asker.id == player.id:
+            room.game.is_victim_a_asker = False
+            # Raffles a different person to the arker to be
+            # the victim
+            while not room.game.is_victim_a_asker:
+                room.game.victim = choice(room.game.players)
+                if room.game.victim.id != room.game.asker:
+                    room.game.is_victim_a_asker = True
+
+            # Show the bottle spining
+            message: Message = await context.send(
+                content = f'Girando a garrafa: <@{choice(room.game.players).id}>'
+            )
+            for _ in range(10):
+                await message.edit(
+                    content = f'Girando a garrafa: <@{choice(room.game.players).id}>'
+                )
+            await message.edit(
+                content = f'Girando a garrafa: <@{room.game.victim.id}>'
+            )
+            await message.delete()
+
+            await context.send(
+                content = f'<@{room.game.asker.id}> pergunta para <@{room.game.victim.id}>. Verdade ou consequência?'
+            )
+            room.game.fase_controller = 2
+        else:
+            await context.send(f'Não é possível girar a garrafa agora agora.')

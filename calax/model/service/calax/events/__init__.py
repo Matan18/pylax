@@ -74,9 +74,9 @@ async def on_message(message):
 
     id_voice_channel: str = None
     id_text_channel: str = None
-    id_bot_master: str = None
-    auth_players: list[Player] = []
-    # Check if was't Calax who sent it
+    bot_master: Player = None
+    game_players: list[Player] = []
+    # Check if wasn't Calax who sent it
     if str(calax.bot.user.id) != player.id:
         rooms: list[Room] = calax.rooms
         # Check if the message was sent in a game text channel
@@ -86,15 +86,16 @@ async def on_message(message):
                 # for the player who sent the mesage
                 for player_in_room in room.players:
                     # If it's a player in a room, it stores its id_voice_channel and id_bot_master
-                    if player_in_room == player.id:
+                    if player_in_room.id == player.id:
                         id_voice_channel = room.id_voice_channel
                         id_text_channel = room.id_txt_channel
-                        id_bot_master = room.game.bot_master
-                        auth_players = room.game.players
+                        bot_master = room.game.bot_master
+                        game_players = room.game.players
                         break
                 break
             # Auth-player or bot_master of this room
-            if player.id in auth_players or player.id == room.game.bot_master.id:
+            if player.id in [player.id for player in game_players] or\
+                player.id == room.game.bot_master.id:
                 await calax.bot.process_commands(message)
             # Not auth-player
             else:

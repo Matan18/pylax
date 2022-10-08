@@ -68,7 +68,7 @@ async def close():
             print('Auth-message not found')
 
 @calax.bot.event
-async def on_message(message):
+async def on_message(message: Message):
     player = Player(str(message.author.id))
     player.user = calax.bot.get_user(int(player.id))
 

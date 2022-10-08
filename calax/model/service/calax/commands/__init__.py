@@ -114,5 +114,7 @@ async def girar(context: Context):
                 content = f'<@{room.game.asker.id}> pergunta para <@{room.game.victim.id}>. Verdade ou consequência?'
             )
             room.game.fase_controller = 2
+            break
         else:
-            await context.send(f'Não é possível girar a garrafa agora agora.')
+            ...
+            # await context.send(f'Não é possível girar a garrafa agora agora.')

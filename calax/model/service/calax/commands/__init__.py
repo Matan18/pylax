@@ -319,10 +319,19 @@ async def status(context: Context):
                 f'**Bot master**: <@{room.game.bot_master.id}>'
             )
             message_list.append(
-                f'**Voice channel id**: <{room.id_voice_channel}> | **Text channel id**: <{room.id_txt_channel}>'
+                f'**Channels**:'
             )
             message_list.append(
-                f'**Asker**: {"<@" + room.game.asker.id + ">" if room.game.asker != None else None} | **Victim**: {"<@" + room.game.victim.id + ">" if room.game.victim != None else None}'
+                f'`{"Id":<25}`  `{"Name":<20}`'
+            )
+            message_list.append(
+                f'`{"<" + room.id_voice_channel + ">":<25}`  <#{room.id_voice_channel}>'
+            )
+            message_list.append(
+                f'`{"<" + room.id_txt_channel + ">":<25}`  <#{room.id_txt_channel}>'
+            )
+            message_list.append(
+                f'\n**Asker**: {"<@" + room.game.asker.id + ">" if room.game.asker != None else None} | **Victim**: {"<@" + room.game.victim.id + ">" if room.game.victim != None else None}'
             )
             message_list.append(
                 f'**Players**: {" | ".join([f"<@{player.id}>" for player in room.players])}'

@@ -190,15 +190,18 @@ async def on_raw_reaction_remove(payload: RawReactionActionEvent):
                 player_room.game.removePlayer(player.id)
                 await player.user.send(f'<@{player.id}>, você não pode sair do jogo. Vai pagar por isso!😈')
                 # If was the victim
-                if player.id == player_room.game.victim.id:
-                    player_room.game.fase_controller = 0
-                    if player_room.game.players_pointer > 0:
-                        player_room.game.players_pointer -= 1
-                    await iniciar(player_room.game.master_context)
+                if player_room.game.victim != None:
+                    if player.id == player_room.game.victim.id:
+                        player_room.game.fase_controller = 0
+                        if player_room.game.players_pointer > 0:
+                            player_room.game.players_pointer -= 1
+                        await iniciar(player_room.game.master_context)
+
                 # If was the asker
-                elif player.id == player_room.game.asker.id:
-                    player_room.game.fase_controller = 0
-                    await iniciar(player_room.game.master_context)
+                if player_room.game.asker != None:
+                    if player.id == player_room.game.asker.id:
+                        player_room.game.fase_controller = 0
+                        await iniciar(player_room.game.master_context)
 
         # ------------ VOTING MESSAGE ------------
         elif str(reacted_message.id) == player_room.game.id_voting_message\

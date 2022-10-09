@@ -42,8 +42,6 @@ async def on_ready():
                         room.addPlayer(
                             player = Player(str(voice_channel_member.id))
                         )
-            # BUG: even if there is no player in the voice channel,
-            # it appends player from other room into players
             else:
                 room.players = []
 
@@ -130,8 +128,21 @@ async def on_raw_reaction_add(payload: RawReactionActionEvent):
         # ------------ VOTING MESSAGE ------------
         elif str(reacted_message.id) == player_room.game.id_voting_message\
         and player.id != str(calax.bot.user.id):
-            # IMPLEMENTS
-            ...
+            # If the user is in the game, it haven't voted yet, it is not
+            # the victim and it's a vote reaction
+            if player.id in [player.id for players in player_room.game.players]\
+            and player.id not in [player.id for players in player_room.game.votes]\
+            and player.id != player_room.game.victim.id\
+            and payload.emoji.name in ["👍", "👎"]:
+            
+                player_room.game.addVote(player)
+
+            else:
+                try:
+                    await reacted_message.remove_reaction(payload.emoji.name, player.user)
+                except:
+                    await reacted_message.remove_reaction(payload.emoji.name, player.user)
+
         # ------------ REACTION OUTTA THE GAME ------------
         else:
             # IMPLEMENTS
@@ -184,26 +195,20 @@ async def on_raw_reaction_remove(payload: RawReactionActionEvent):
         elif str(reacted_message.id) == player_room.game.id_voting_message\
         and player.id != str(calax.bot.user.id):
             # IMPLEMENTS
-            ...
+            # If the user is in the game, it have already voted, it is not
+            # the victim and it's a vote reaction
+            if player.id in [player.id for players in player_room.game.players]\
+            and player.id in [player.id for players in player_room.game.votes]\
+            and player.id != player_room.game.victim.id\
+            and payload.emoji.name in ["👍", "👎"]:
+
+                await reacted_message.remove_reaction(payload.emoji.name, player.user)
+
         # ------------ REACTION OUTTA THE GAME ------------
         else:
             # IMPLEMENTS
             ...
 
-#   user = client.get_user(payload.user_id)
-#   n_vc_channel_id = returnChannelIdByUserId(payload.user_id, 'mem_vc_id')
-#   # If user is in voice channel and the channel is the game channel
-#   if n_vc_channel_id and payload.user_id in channels_ids[n_vc_channel_id]['mem_vc_id']:
-#     # If it is auth message
-#     if payload.message_id == channels_ids[n_vc_channel_id]['auth_msg_id']:
-#       # If user is in the voice channel
-#       if payload.user_id in channels_ids[n_vc_channel_id]['mem_play_id']:
-#         channels_ids[n_vc_channel_id]['mem_play_id'].remove(payload.user_id)
-#         await user.send(f'<@{payload.user_id}>, você não pode sair do jogo. Vai pagar por isso!😈')
-  
-#     if payload.message_id == channels_ids[n_vc_channel_id]['vote_msg_id'] and payload.user_id != client.user.id:
-#       if payload.emoji.name in ["👍", "👎"] and payload.user_id in channels_ids[n_vc_channel_id]['votes']:
-#         channels_ids[n_vc_channel_id]['votes'].remove(payload.user_id)
 
 @calax.bot.event
 async def on_voice_state_update(

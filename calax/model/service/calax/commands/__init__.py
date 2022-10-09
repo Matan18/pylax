@@ -1,4 +1,5 @@
 import json
+from time import sleep
 
 from model.instances.calax import calax
 from model.entities.player import Player
@@ -183,3 +184,72 @@ async def ajuda(context: Context):
                 chosen_question = choice(questions_as_dict[room.game.victim.response])
                 await context.send(f'<@{room.game.victim.id}>, {chosen_question}')
                 break
+
+# Command to be used when the challenge or the answer is done
+@calax.bot.command()
+async def feito(context: Context):
+    player: Player = Player(str(context.author.id))
+    player.user = calax.bot.get_user(int(player.id))
+    player_room: Room = findRoomInCalaxByPlayerId(player.id, calax)
+    for room in calax.rooms:
+        if str(context.channel.id) == room.id_txt_channel and\
+        room.game.fase_controller == 3 and\
+        room.game.victim.id == player.id:
+        
+            # Starts the vote to see if people believe in the victim
+            message = await context.send("Vocês acreditam nessa pessoa?")
+            await message.add_reaction("👍")
+            await message.add_reaction("👎")
+            room.game.id_voting_message = str(message.id)
+
+            # Wait 10 seconds to finish the vote
+            number_emojis: list[str] = [
+                "🔟", "9️⃣", "8️⃣", "7️⃣", "6️⃣", "5️⃣", "4️⃣", "3️⃣", "2️⃣", "1️⃣", "0️⃣"
+            ]
+            for number_emoji in number_emojis:
+                await message.add_reaction(number_emoji)
+                # if all the players already voted, stop votes 
+                if len(room.game.votes) == len(room.game.players) - 1:
+                    try:
+                        await message.clear_reaction(number_emoji)
+                        break
+                    except:
+                        await message.clear_reaction(number_emoji)
+                        break
+                sleep(1)
+                await message.clear_reaction(number_emoji)
+
+            updated_message: Message = await context.channel.fetch_message(message.id)
+
+            positive: int = 0
+            negative: int = 0 
+            # Counts the votes
+            for reaction in updated_message.reactions:
+                if str(reaction) == "👍":
+                    positive = reaction.count
+                elif str(reaction) == "👎":
+                    negative = reaction.count
+
+            # Verifies results
+            if positive > negative:
+                await context.send(
+                    f'<@{room.game.victim.id}>, as pessoas acreditaram em você.\nMuito bem! Ganhou uma estrelinha.⭐'
+                )
+            elif negative > positive:
+                await context.send(
+                    f'<@{room.game.victim.id}>, as pessoas não acreditaram em você.\nVocê vai pagar por isso!😈'
+                )
+            else:
+                await context.send(
+                    f'<@{room.game.victim.id}>, as pessoas ficaram na Dúvida.\nVocê falhou.'
+                )
+            room.game.fase_controller = 0
+            room.game.votes = []
+
+            # Starts a new round after 1s
+            sleep(1)
+            await iniciar(room.game.master_context)
+            break
+        else:
+            ...
+            # await context.send(f'<@{player.id}>, você não pode responder agora.')

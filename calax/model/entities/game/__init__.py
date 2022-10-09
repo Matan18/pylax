@@ -110,6 +110,9 @@ class Game:
     def votes(self, votes: list[Player]) -> None:
         self.__votes = votes
 
+    def addVote(self, player: Player) -> None:
+        self.__votes.append(player)
+
     def addPlayer(self, player: Player) -> None:
         self.__players.append(player)
 

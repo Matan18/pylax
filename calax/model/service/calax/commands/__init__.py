@@ -195,7 +195,10 @@ async def feito(context: Context):
         if str(context.channel.id) == room.id_txt_channel and\
         room.game.fase_controller == 3 and\
         room.game.victim.id == player.id:
-        
+
+            # Clear last votes
+            room.game.votes = []
+
             # Starts the vote to see if people believe in the victim
             message = await context.send("Vocês acreditam nessa pessoa?")
             await message.add_reaction("👍")
@@ -244,7 +247,6 @@ async def feito(context: Context):
                     f'<@{room.game.victim.id}>, as pessoas ficaram na Dúvida.\nVocê falhou.'
                 )
             room.game.fase_controller = 0
-            room.game.votes = []
 
             # Starts a new round after 1s
             sleep(1)

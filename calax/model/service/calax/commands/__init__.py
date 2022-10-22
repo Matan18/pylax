@@ -44,7 +44,7 @@ async def showListOfPlayers(context: Context) -> None:
                         [punished_playes.id for punished_playes in room.game.punished_players]
                 message: list[str] = [
                     'Pessoas participando da brincadeira:',
-                    *[f' - [{player.faults}] ~~{player.user.name}~~'
+                    *[f' - {"🚩" * player.faults} | ~~{player.user.name}~~'
                       if player.id in punished_player_ids
                       else f' - <@{player.id}>'
                       for player in room.game.players]
@@ -76,16 +76,7 @@ async def iniciar(context: Context):
                 room.game.master_context = context
 
                 if room.game.fase_controller == 0 and len(room.game.players) > 1:
-                    room.game.asker = room.game.players[room.game.players_pointer]
                     # [REFACTOR IT]
-                    # Every new game goes to the next player;
-                    # if the next player is the last one, it goes
-                    # to the first one
-                    if room.game.players_pointer < len(room.game.players) - 1:
-                        room.game.players_pointer += 1
-                    else:
-                        room.game.players_pointer = 0
-                    # Check if the next arker will not be a punished player
                     punished_player_ids: list[str] =\
                         [punished_playes.id for punished_playes in room.game.punished_players]
                     while room.game.players[room.game.players_pointer].id in punished_player_ids:
@@ -95,6 +86,15 @@ async def iniciar(context: Context):
                             room.game.players_pointer += 1
                         else:
                             room.game.players_pointer = 0
+                    room.game.asker = room.game.players[room.game.players_pointer]
+                    # Every new game goes to the next player;
+                    # if the next player is the last one, it goes
+                    # to the first one
+                    if room.game.players_pointer < len(room.game.players) - 1:
+                        room.game.players_pointer += 1
+                    else:
+                        room.game.players_pointer = 0
+                    # Check if the next arker will not be a punished player
                         
 
                     # Shows which people are in the game

@@ -21,6 +21,7 @@ class Game:
         self.players_pointer: int = 0
         self.victim: Player = None
         self.votes: list[Player] = []
+        self.punished_players: list[Player] = []
 
     def addVote(self, player: Player) -> None:
         self.votes.append(player)
@@ -32,3 +33,11 @@ class Game:
         for player in self.players:
             if player.id == id_player:
                 self.players.remove(player)
+                
+    def addPunishedPlayer(self, player: Player) -> None:
+        self.punished_players.append(player)
+        
+    def removePunishedPlayer(self, id_player: str) -> None:
+        for player in self.punished_players:
+            if player.id == id_player:
+                self.punished_players.remove(player)

@@ -40,9 +40,14 @@ async def showListOfPlayers(context: Context) -> None:
     if player.id in bot_masters:
         for room in calax.rooms:
             if room.id_txt_channel == str(context.channel.id):
+                punished_player_ids: list[str] =\
+                        [punished_playes.id for punished_playes in room.game.punished_players]
                 message: list[str] = [
                     'Pessoas participando da brincadeira:',
-                    *[f' - <@{player.id}>' for player in room.game.players]
+                    *[f' - [{player.faults}] ~~{player.user.name}~~'
+                      if player.id in punished_player_ids
+                      else f' - <@{player.id}>'
+                      for player in room.game.players]
                 ]
                 await context.send('\n'.join(message))
                 break
@@ -72,6 +77,7 @@ async def iniciar(context: Context):
 
                 if room.game.fase_controller == 0 and len(room.game.players) > 1:
                     room.game.asker = room.game.players[room.game.players_pointer]
+                    # [REFACTOR IT]
                     # Every new game goes to the next player;
                     # if the next player is the last one, it goes
                     # to the first one
@@ -79,6 +85,17 @@ async def iniciar(context: Context):
                         room.game.players_pointer += 1
                     else:
                         room.game.players_pointer = 0
+                    # Check if the next arker will not be a punished player
+                    punished_player_ids: list[str] =\
+                        [punished_playes.id for punished_playes in room.game.punished_players]
+                    while room.game.players[room.game.players_pointer].id in punished_player_ids:
+                        # [DEBUG]
+                        print(f'Next asker: {room.game.players[room.game.players_pointer].user.name}')
+                        if room.game.players_pointer < len(room.game.players) - 1:
+                            room.game.players_pointer += 1
+                        else:
+                            room.game.players_pointer = 0
+                        
 
                     # Shows which people are in the game
                     await showListOfPlayers(context = context)
@@ -101,10 +118,16 @@ async def girar(context: Context):
             room.game.is_victim_a_asker = False
             # Raffles a different person to the arker to be
             # the victim
+            punished_player_ids: list[str] =\
+                        [punished_playes.id for punished_playes in room.game.punished_players]
             while not room.game.is_victim_a_asker:
                 room.game.victim = choice(room.game.players)
-                if room.game.victim.id != room.game.asker.id:
+                # [DEBUG]
+                print(f'Victim: {room.game.victim.user.name}')
+                if room.game.victim.id != room.game.asker.id\
+                    and room.game.victim.id not in punished_player_ids:
                     room.game.is_victim_a_asker = True
+            print('-'*80)
 
             # Show the bottle spining
             message: Message = await context.send(
@@ -239,18 +262,34 @@ async def feito(context: Context):
 
             # Verifies results
             if positive > negative:
+                room.game.victim.stars += 1
                 await context.send(
                     f'<@{room.game.victim.id}>, as pessoas acreditaram em você.\nMuito bem! Ganhou uma estrelinha.⭐'
                 )
             elif negative > positive:
+                room.game.victim.faults += 1
                 await context.send(
                     f'<@{room.game.victim.id}>, as pessoas não acreditaram em você.\nVocê vai pagar por isso!😈'
                 )
+                
+                if room.game.victim.faults >= 2:
+                    room.game.addPunishedPlayer(
+                        player = room.game.victim
+                    )
             else:
                 await context.send(
                     f'<@{room.game.victim.id}>, as pessoas ficaram na Dúvida.\nVocê falhou.'
                 )
             room.game.fase_controller = 0
+            
+            # Remove one fault of each player if it is not a victim
+            for punished_player in room.game.punished_players:
+                if punished_player.id != room.game.victim.id:
+                    punished_player.faults -= 1
+                    if punished_player.faults <= 0:
+                        room.game.removePunishedPlayer(
+                            id_player = punished_player.id
+                        )         
 
             # Starts a new round after 1s
             sleep(1)

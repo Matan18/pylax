@@ -42,7 +42,7 @@ async def showListOfPlayers(context: Context) -> None:
             if room.id_txt_channel == str(context.channel.id):
                 message: list[str] = [
                     'Pessoas participando da brincadeira:',
-                    *[f' - <@{player.id}>' for player in room.players]
+                    *[f' - <@{player.id}>' for player in room.game.players]
                 ]
                 await context.send('\n'.join(message))
                 break

@@ -1,8 +1,8 @@
 from model.instances.calax import calax
 from model.entities.player import Player
 from model.entities.room import Room
-from model.service.calax.commands import (
-    iniciar
+from model.service.calax.commands.start import (
+    start
 )
 
 from util.room import (
@@ -65,8 +65,9 @@ async def close():
         # Add first reaction in auth message
         await message.add_reaction("👍")
     except Exception as exception:
-        if exception.code == 10008:
-            print('Auth-message not found')
+        # if exception.code == 10008:
+            # print('Auth-message not found')
+        print(exception)
 
 @calax.bot.event
 async def on_message(message: Message):
@@ -195,13 +196,13 @@ async def on_raw_reaction_remove(payload: RawReactionActionEvent):
                         player_room.game.fase_controller = 0
                         if player_room.game.players_pointer > 0:
                             player_room.game.players_pointer -= 1
-                        await iniciar(player_room.game.master_context)
+                        await start(player_room.game.master_context)
 
                 # If was the asker
                 if player_room.game.asker != None:
                     if player.id == player_room.game.asker.id:
                         player_room.game.fase_controller = 0
-                        await iniciar(player_room.game.master_context)
+                        await start(player_room.game.master_context)
 
         # ------------ VOTING MESSAGE ------------
         elif str(reacted_message.id) == player_room.game.id_voting_message\

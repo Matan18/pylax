@@ -35,7 +35,8 @@ async def on_message(message: Message):
                         bot_master = room.game.bot_master
                         game_players = room.game.players
                         break
-                break
+                if game_players != []:
+                    break
             # Auth-player or bot_master of this room
             if player.id in [player.id for player in game_players] or\
                 player.id == room.game.bot_master.id:

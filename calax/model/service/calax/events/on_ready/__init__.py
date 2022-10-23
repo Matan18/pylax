@@ -36,13 +36,11 @@ async def on_ready():
             if len(voice_channel_members) > 0:
                 for voice_channel_member in voice_channel_members:
                     # List all rooms to see if this player is in another one
-                    if not str(voice_channel_member.id) in ids_in_room:
-                        # Bug appears in the following line
+                    if str(voice_channel_member.id) not in ids_in_room:
                         room.addPlayer(
                             player = Player(str(voice_channel_member.id))
                         )
-            else:
-                room.players = []
+
 
     except Exception as exception:
         if exception.code == 10008:

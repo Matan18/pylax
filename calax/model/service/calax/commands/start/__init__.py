@@ -37,7 +37,7 @@ async def start(context: Context):
                 punished_player_ids: list[str] =\
                     [punished_playes.id for punished_playes in room.game.punished_players]
                 if room.game.fase_controller == 0\
-                    and len([player for player in room.game.players if player.id not in punished_player_ids]) > 1:
+                and len([player for player in room.game.players if player.id not in punished_player_ids]) > 1:
                     # [REFACTOR IT]
                     while room.game.players[room.game.players_pointer].id in punished_player_ids:
                         if room.game.players_pointer < len(room.game.players) - 1:

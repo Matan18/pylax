@@ -116,3 +116,10 @@ async def done(context: Context):
         else:
             # [IMPLEMENTS]
             ...
+            
+
+# --------------- ALIASES ---------------
+def done_aliases() -> None:
+    @calax.bot.command()
+    async def feito(context: Context):
+        await done(context)

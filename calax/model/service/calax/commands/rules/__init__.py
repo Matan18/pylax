@@ -46,13 +46,13 @@ async def rules(
                 'Comandos:\n'
             )
             message_list.append(
-                f'{"iniciar | comeca | começa | play ":>35} - Inicia uma nova partida. Não é possível iniciar enquanto uma outra estiver acontecendo.'
+                f'{"iniciar | comecar | começar | start ":>35} - Inicia uma nova partida. Não é possível iniciar enquanto uma outra estiver acontecendo.'
             )
             message_list.append(
-                f'{"girar | gira | rodar | roda ":>35} - Sorteia quem irá desafiar quem.'
+                f'{"girar | gira | rodar | roda | spin ":>35} - Sorteia quem irá desafiar quem.'
             )
             message_list.append(
-                f'{"op | opcao | opção | option ":>35} - Escolhe qual das opções a vítima quer. Use `v` ou `c` para escolher.'
+                f'{"op | opcao | opção | option | choice ":>35} - Escolhe qual das opções a vítima quer. Use `v` ou `c` para escolher.'
             )
             message_list.append(
                 f'{"ajuda | ajd | help ":>35} - Não sabe o que perguntar? Use esse comando que Calux vai te ajudar.'
@@ -71,3 +71,18 @@ async def rules(
             )
 
             await context.send('```' + '\n'.join(message_list) + '```')
+
+
+# --------------- ALIASES ---------------
+def rules_aliases() -> None:
+    @calax.bot.command()
+    async def regras(context: Context):
+        await rules(context)
+
+    @calax.bot.command()
+    async def regra(context: Context):
+        await rules(context)
+
+    @calax.bot.command()
+    async def rule(context: Context):
+        await rules(context)

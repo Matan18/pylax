@@ -63,3 +63,17 @@ async def start(context: Context):
                 else:
                     await context.send(f'Não é possível inciar uma partida agora. Veja o número de jogadores ou em que fase estamos.')
                 break
+
+# --------------- ALIASES ---------------
+def start_aliases() -> None:
+    @calax.bot.command()
+    async def iniciar(context: Context):
+        await start(context)
+
+    @calax.bot.command()
+    async def comecar(context: Context):
+        await start(context)
+
+    @calax.bot.command()
+    async def começar(context: Context):
+        await start(context)

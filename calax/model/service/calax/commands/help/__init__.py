@@ -46,3 +46,14 @@ async def help(context: Context):
                 chosen_question = choice(questions_as_dict[room.game.victim.response])
                 await context.send(f'<@{room.game.victim.id}>, {chosen_question}')
                 break
+            
+
+# --------------- ALIASES ---------------
+def help_aliases() -> None:
+    @calax.bot.command()
+    async def ajuda(context: Context):
+        await help(context)
+
+    @calax.bot.command()
+    async def ajd(context: Context):
+        await help(context)

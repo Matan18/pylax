@@ -63,3 +63,46 @@ async def choice(
         else:
             # [IMPLEMENTS]
             ...
+
+
+# --------------- ALIASES ---------------
+def choice_aliases() -> None:
+    @calax.bot.command()
+    async def opcao(
+        context: Context,
+        option: str = ''
+    ):
+        await choice(
+            context,
+            option,
+        )
+
+    @calax.bot.command()
+    async def op(
+        context: Context,
+        option: str = ''
+    ):
+        await choice(
+            context,
+            option,
+        )
+
+    @calax.bot.command()
+    async def opção(
+        context: Context,
+        option: str = ''
+    ):
+        await choice(
+            context,
+            option,
+        )
+
+    @calax.bot.command()
+    async def option(
+        context: Context,
+        option: str = ''
+    ):
+        await choice(
+            context,
+            option,
+        )

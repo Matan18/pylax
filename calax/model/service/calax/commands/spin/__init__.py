@@ -68,3 +68,21 @@ async def spin(context: Context):
         else:
             # [IMPLEMENTS]
             ...
+
+# --------------- ALIASES ---------------
+def spin_aliases() -> None:
+    @calax.bot.command()
+    async def girar(context: Context):
+        await spin(context)
+
+    @calax.bot.command()
+    async def gira(context: Context):
+        await spin(context)
+
+    @calax.bot.command()
+    async def rodar(context: Context):
+        await spin(context)
+
+    @calax.bot.command()
+    async def roda(context: Context):
+        await spin(context)

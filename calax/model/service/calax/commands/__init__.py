@@ -74,14 +74,12 @@ async def iniciar(context: Context):
         for room in calax.rooms:
             if str(context.channel.id) == room.id_txt_channel:
                 room.game.master_context = context
-
-                if room.game.fase_controller == 0 and len(room.game.players) > 1:
+                punished_player_ids: list[str] =\
+                    [punished_playes.id for punished_playes in room.game.punished_players]
+                if room.game.fase_controller == 0\
+                    and len([player for player in room.game.players if player.id not in punished_player_ids]) > 1:
                     # [REFACTOR IT]
-                    punished_player_ids: list[str] =\
-                        [punished_playes.id for punished_playes in room.game.punished_players]
                     while room.game.players[room.game.players_pointer].id in punished_player_ids:
-                        # [DEBUG]
-                        print(f'Next asker: {room.game.players[room.game.players_pointer].user.name}')
                         if room.game.players_pointer < len(room.game.players) - 1:
                             room.game.players_pointer += 1
                         else:
@@ -122,12 +120,9 @@ async def girar(context: Context):
                         [punished_playes.id for punished_playes in room.game.punished_players]
             while not room.game.is_victim_a_asker:
                 room.game.victim = choice(room.game.players)
-                # [DEBUG]
-                print(f'Victim: {room.game.victim.user.name}')
                 if room.game.victim.id != room.game.asker.id\
                     and room.game.victim.id not in punished_player_ids:
                     room.game.is_victim_a_asker = True
-            print('-'*80)
 
             # Show the bottle spining
             message: Message = await context.send(

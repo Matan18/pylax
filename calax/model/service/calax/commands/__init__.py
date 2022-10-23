@@ -308,6 +308,9 @@ async def restart(context: Context):
             room.game.players_pointer = 0
             room.game.asker = None
             room.game.victim = None
+            room.game.punished_players = []
+            for player in room.game.players: player.faults = 0
+            
             message = await context.send("Reloading")
             clock_emojis: list[str] = [
                 "🕛", "🕜", "🕑"

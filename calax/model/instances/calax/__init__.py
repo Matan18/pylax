@@ -1,14 +1,21 @@
-# Personal packages
+# --------------- BUILT-IN PACKAGES ---------------
+from dotenv import load_dotenv
+import json
+import os
+
+
+# --------------- DISCORD PACKAGES ---------------
+import discord
+from discord.ext import (
+    commands
+)
+
+# --------------- PERSONAL PACKAGES ---------------
 from model.entities.calax import Calax
 from model.entities.game import Game
 from model.entities.room import Room
 from model.entities.player import Player
-
-# External packges
-import discord
-from discord.ext import commands
-from dotenv import load_dotenv
-import os
+from util import ROOT_PATH
 
 load_dotenv()
 TOKEN: str = os.getenv('TOKEN')
@@ -33,18 +40,13 @@ calax = Calax(
     bot = bot
 )
 
-rooms = [
-    {
-        'bot_master': '546840612972789782',
-        'id_text_channel': '1018594639021875271',
-        'id_voice_channel': '910507210906431498'
-    },
-    {
-        'bot_master': '772066124052693013',
-        'id_text_channel': '1018594664259006504',
-        'id_voice_channel': '910518654926475274'
-    }
-]
+# Load rooms informations
+rooms_path: str = f'{ROOT_PATH}/src/json/rooms.json'
+with open(
+        file = rooms_path,
+        mode = 'r'
+    ) as rooms_as_json:
+    rooms: list[dict[str, str]] = json.load(rooms_as_json)
 
 # Add all games to calax
 for room in rooms:

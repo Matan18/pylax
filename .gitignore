@@ -161,3 +161,4 @@ cython_debug/
 
 # Local user
 test.py
+**/src/json/rooms.json

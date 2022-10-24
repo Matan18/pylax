@@ -41,9 +41,9 @@ async def help(context: Context):
                 encoding = 'utf-8'
             ) as questions_as_json:
 
-                questions_as_dict: dict[str, list[str]] = json.load(questions_as_json)
+                questions: dict[str, list[str]] = json.load(questions_as_json)
                 # It chooses a question
-                chosen_question = choice(questions_as_dict[room.game.victim.response])
+                chosen_question = choice(questions[room.game.victim.response])
                 await context.send(f'<@{room.game.victim.id}>, {chosen_question}')
                 break
             

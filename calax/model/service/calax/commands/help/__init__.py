@@ -27,7 +27,7 @@ from util.room import (
 # Command to be used when asker doesn't know what to ask
 @calax.bot.command()
 async def help(context: Context):
-    questions_path: str = f'{ROOT_PATH}/src/json/questoes.json'
+    questions_path: str = f'{ROOT_PATH}/src/json/questions.json'
     player: Player = Player(str(context.author.id))
     player.user = calax.bot.get_user(int(player.id))
     player_room: Room = findRoomInCalaxByPlayerId(player.id, calax)

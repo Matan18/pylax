@@ -1,3 +1,7 @@
+from model.service.pylax.commands.add_auth_message import (
+    add_auth_message
+)
+
 from model.service.pylax.commands.choice import (
     choice,
     choice_aliases,

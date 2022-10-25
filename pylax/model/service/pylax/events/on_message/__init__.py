@@ -39,7 +39,7 @@ async def on_message(message: Message):
                     break
             # Auth-player or bot_master of this room
             if player.id in [player.id for player in game_players] or\
-                player.id == room.game.bot_master.id:
+                player.id == bot_master.id:
                 await pylax.bot.process_commands(message)
             # Not auth-player
             else:

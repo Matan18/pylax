@@ -112,7 +112,7 @@ async def done(context: Context):
                 await start(room.game.master_context)
                 break
             else:
-                await context.send(f'Não é possível responder agora. Veja o número de jogadores ou em que fase estamos.')
+                await context.send(f'🟥 | Não é possível responder agora. Veja o número de jogadores ou em que fase estamos.')
         else:
             # [IMPLEMENTS]
             ...

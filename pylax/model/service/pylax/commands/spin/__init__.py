@@ -47,14 +47,14 @@ async def spin(context: Context):
 
                 # Show the bottle spining
                 message: Message = await context.send(
-                    content = f'Girando a garrafa: <@{choice(room.game.players).id}>'
+                    content = f'🍾 | Girando a garrafa: **{choice(room.game.players).user.name}**.'
                 )
                 for _ in range(10):
                     await message.edit(
-                        content = f'Girando a garrafa: <@{choice(room.game.players).id}>'
+                        content = f'🍾 | Girando a garrafa: **{choice(room.game.players).user.name}**.'
                     )
                 await message.edit(
-                    content = f'Girando a garrafa: <@{room.game.victim.id}>'
+                    content = f'🍾 | Girando a garrafa: <@{room.game.victim.id}>'
                 )
                 await message.delete()
 
@@ -64,7 +64,7 @@ async def spin(context: Context):
                 room.game.fase_controller = 2
                 break
             else:
-                await context.send(f'Não é possível girar a garrafa agora agora. Veja o número de jogadores.')
+                await context.send(f'🟥 | Não é possível girar a garrafa agora agora. Veja o número de jogadores.')
         else:
             # [IMPLEMENTS]
             ...

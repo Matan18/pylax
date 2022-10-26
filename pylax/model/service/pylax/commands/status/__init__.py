@@ -62,7 +62,7 @@ async def status(context: Context):
             )
             for game_player in room.game.players:
                 message_list.append(
-                    f'`{game_player.number_of_truths:<14}`  `{game_player.id:<20}`  `{"[" + str(game_player.stars) + "]":<10}`   `[{game_player.faults}] {"✅" if game_player.id in [player.id for player in room.game.punished_players] else "🟥":<7}` <@{game_player.id}>'
+                    f'`{game_player.number_of_truths:<14}`  `{game_player.id:<20}`  `{"[" + str(game_player.stars) + "]":<10}`   `[{game_player.faults}] {"🟥" if game_player.id in [player.id for player in room.game.punished_players] else "✅":<7}` `{game_player.user.name:<20}`'
                 )
             await context.send('\n'.join(message_list))
             break

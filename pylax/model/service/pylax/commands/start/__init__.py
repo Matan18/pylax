@@ -61,7 +61,7 @@ async def start(context: Context):
                     room.game.fase_controller = 1
                     break
                 else:
-                    await context.send(f'Não é possível inciar uma partida agora. Veja o número de jogadores ou em que fase estamos.')
+                    await context.send(f'🟥 | Não é possível inciar uma partida agora. Veja o número de jogadores ou em que fase estamos.')
                 break
 
 # --------------- ALIASES ---------------

@@ -40,7 +40,7 @@ async def choice(
             if len([player for player in room.game.players if player.id not in punished_player_ids]) > 1:
                 if option == 'v':
                     # It can choose truth
-                    if room.game.victim.number_of_truths <= 3:
+                    if room.game.victim.number_of_truths < 3:
                         room.game.victim.response = 'verdade'
                         await context.send(f'<@{room.game.asker.id}>, faça sua pergunta.')
                         room.game.victim.number_of_truths += 1
@@ -59,7 +59,7 @@ async def choice(
                     room.game.fase_controller = 3
                     break
             else:
-                await context.send(f'Não é possível enviar uma resposta para o bot agora. Veja o número de jogadores ou em que fase estamos.')
+                await context.send(f'🟥 | Não é possível enviar uma resposta para o bot agora. Veja o número de jogadores ou em que fase estamos.')
         else:
             # [IMPLEMENTS]
             ...

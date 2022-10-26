@@ -1,5 +1,5 @@
 # --------------- BUILT-IN PACKAGES ---------------
-from dotenv import load_dotenv
+from dotenv import load_dotenv, find_dotenv, set_key
 import os
 
 # --------------- DISCORD PACKAGES ---------------
@@ -35,11 +35,13 @@ async def add_auth_message(
     player: Player = Player(str(context.author.id))
     player.user = pylax.bot.get_user(int(player.id))
     if player.id in [room.game.bot_master.id for room in pylax.rooms]:
-        # [IMPLEMENTS] - Delete old image before send a new one
         print('Enviando imagem...')
         load_dotenv()
         id_auth_message: str = os.getenv('id_auth_channel')
         auth_channel: TextChannel = pylax.bot.get_channel(int(id_auth_message))
+
+        # Delete all messages in the channel
+        await auth_channel.purge()
 
         image_path: str = f'{ROOT_PATH}/src/image/pylax_banner.png'
         with open(image_path, 'rb') as file:
@@ -47,5 +49,8 @@ async def add_auth_message(
 
         message = await auth_channel.send(file=auth_image)
         await message.add_reaction("👍")
+
+        # Store the new message id
         pylax.id_auth_message = str(message.id)
-        os.environ.setdefault('id_auth_channel', 'batata')
+        dotenv_file: str = find_dotenv()
+        set_key(dotenv_file, 'id_auth_message', str(message.id))

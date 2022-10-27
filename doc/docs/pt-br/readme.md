@@ -1,5 +1,7 @@
 # Pylax
 
+[Read this document in other languages](../global_docs.md)
+
 O Pylax é um projeto [Open Source](https://pt.wikipedia.org/wiki/C%C3%B3digo_aberto) de um bot para ajudar a administrar a brincadeira de **Verdade ou Desafio** em comunidades do [Discord](https://discord.com/). O projeto criado inicialmente para ser utilizado na [Comunidade Ballerini](https://discord.gg/wagxzStdcR), mas hoje está disponível de maneira aberta. O Pylax é a versão **2.0** do projeto que anteriormente se chamava [Calax](https://github.com/MateusSantosMeuBem/calax_v_python), cujo nome é baseado no personagem demoníaco do filme [Truth or Dare](https://pt.wikipedia.org/wiki/Truth_or_Dare_(2018)).
 
 ## Configurações do bot
@@ -96,7 +98,7 @@ Os comandos do bot são executados através de mensagens enviadas no canal de te
 ## Sobre o jogo
 **Script do jogo**
 - O jogo começa quando o bot master digita o comando `??iniciar`.
-- A pessoan na vez (asker) deve girar a garrafa para escolher uma vítima.
+- A pessoa na vez (asker) deve girar a garrafa para escolher uma vítima.
 - A vítima deve escolher uma opção entre as 2 disponíveis (v: verdade, c: consequência).
 - Baseado no que a vítmia escolheu, o asker deve fazer uma pergunta.
 - Após a vítima responder a pergunta, ela deve digitar o comando `??feito`.

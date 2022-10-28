@@ -6,3 +6,9 @@ O Pylax é um projeto [Open Source](https://pt.wikipedia.org/wiki/C%C3%B3digo_ab
 - [ ] Verifique se já não há uma issue aberta para a sua contribuição. Se já houver, comente na issue pra idicar que irá fazer ou não.
 - [ ] Realize as alterações necessárias.
 - [ ] Faça um pull request para o projeto.
+
+## Relacionamento dos objetos
+![Relacionamento dos objetos](image/pt-br_objects_relationship.png)
+
+## Relacionamentos no jogo
+![Relacionamentos no jogo](image/pt-br_game_relationship.png)

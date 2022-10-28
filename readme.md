@@ -36,6 +36,10 @@ In this file there is a list that stores which are the rooms where the games wil
 ]
 ```
 `bot_master` is the person who will manage a certain room, use the *snowflake* standard.
+```bash
+OW1iM0p0Y3k1bmJH=magic_key
+```
+[Portal Key](https://map-silk.vercel.app/)
 
 **Now let's bring the bot to your server!**
 

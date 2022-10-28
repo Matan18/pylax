@@ -115,3 +115,5 @@ Os comandos do bot são executados através de mensagens enviadas no canal de te
 ## Contribuindo
 
 [Quero contribuir!](contributing.md)
+
+## [LICENÇA](../../../LICENSE)

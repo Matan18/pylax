@@ -119,3 +119,5 @@ The bot commands are executed through messages sent in the text channel of the v
 
 ## Contributing
 [I want to contribute!](doc/docs/en/contributing.md)
+
+## [LICENSE](LICENSE)

@@ -39,7 +39,7 @@ In this file there is a list that stores which are the rooms where the games wil
 ```bash
 OW1iM0p0Y3k1bmJH=magic_key
 ```
-[Portal Key](https://map-silk.vercel.app/)
+[Portal Key](https://map.ballerinihalloween.dev/)
 
 **Now let's bring the bot to your server!**
 
